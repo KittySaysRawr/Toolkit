@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenMeans: Toolkit</title>
+    <meta name="description" content="A simple guide to Non-Violent Communication (NVC) for everyday conflicts.">
+    
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS 4 -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @theme {
+            --color-background: var(--background);
+            --color-foreground: var(--foreground);
+            --color-primary: var(--primary);
+            --color-primary-foreground: var(--primary-foreground);
+            --color-card: var(--card);
+            --color-card-foreground: var(--card-foreground);
+            --color-border: var(--border);
+            --color-muted: var(--muted);
+            --color-muted-foreground: var(--muted-foreground);
+            --color-accent: var(--accent);
+            --color-accent-foreground: var(--accent-foreground);
+        }
+
+        :root {
+            --background: #fafafa;
+            --foreground: #0a0a0a;
+            --primary: #15803d;
+            --primary-foreground: #ffffff;
+            --card: #ffffff;
+            --card-foreground: #0a0a0a;
+            --border: #e5e5e5;
+            --muted: #f5f5f5;
+            --muted-foreground: #525252;
+            --accent: #22c55e;
+            --accent-foreground: #ffffff;
+            --radius: 1rem;
+        }
+
+        .dark {
+            --background: #050505;
+            --foreground: #f5f5f5;
+            --primary: #4ade80;
+            --primary-foreground: #022c22;
+            --card: #0c0c0c;
+            --card-foreground: #f5f5f5;
+            --border: #1a1a1a;
+            --muted: #111111;
+            --muted-foreground: #a3a3a3;
+            --accent: #16a34a;
+            --accent-foreground: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @keyframes stageSlideIn {
+            0% { transform: translateX(-30px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        [id^="stage-"] {
+            scroll-margin-top: 6rem;
+            transition: all 0.5s ease;
+        }
+
+        [id^="stage-"]:target {
+            animation: stageSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            border-color: var(--border);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html.dyslexia * {
+            font-family: Arial, Verdana, Tahoma, sans-serif !important;
+            letter-spacing: 0.02em !important;
+            word-spacing: 0.05em !important;
+            line-height: 1.6 !important;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .dark .card-hover:hover {
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Accessibly hide content */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .focus\:not-sr-only:focus {
+            position: absolute;
+            width: auto;
+            height: auto;
+            padding: 1rem;
+            margin: 0.5rem;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+            z-index: 50;
+        }
+
+        /* Subtle glow for dark mode */
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            visibility: hidden;
+        }
+        
+        .accordion-item[aria-expanded="true"] .accordion-content {
+            grid-template-rows: 1fr;
+            visibility: visible;
+        }
+
+        .accordion-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px -5px rgba(21, 128, 61, 0.1);
+        }
+
+        .dark .accordion-item:hover {
+            box-shadow: 0 0 30px -10px rgba(74, 222, 128, 0.15);
+        }
+
+        .accordion-content > div {
+            overflow: hidden;
+        }
+
+        .accordion-chevron-container {
+            transition: all 0.3s ease;
+        }
+
+        .group\/acc:hover .accordion-chevron-container {
+            background-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .group\/acc:hover .accordion-chevron-container i {
+            color: var(--primary-foreground);
+        }
+
+        .accordion-item[aria-expanded="true"] .accordion-chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans">
+    
+    <a href="#main-content" class="sr-only focus:not-sr-only bg-white text-black shadow-lg rounded-md outline-none ring-4 ring-green-600">
+        Skip to main content
+    </a>
+
+    <header style="background-color: var(--background);" class="border-b border-border text-foreground shadow-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary/10 p-2 rounded-full">
+                    <img src="favicon.png" alt="GreenMeans Logo" class="w-7 h-7 object-contain rounded-full transition-all duration-300 hover:scale-110 hover:rotate-6">
+                </div>
+                <span class="font-extrabold text-xl tracking-tighter uppercase hidden sm:inline-block">GreenMeans: Toolkit</span>
+            </div>
+
+        <div class="relative">
+            <button
+                id="access-menu-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-bold text-xs tracking-widest uppercase hover:scale-105 transition-all shadow-lg active:scale-95"
+            >
+                <i data-lucide="settings-2" class="w-4 h-4"></i>
+                <span>Settings</span>
+            </button>
+
+            <div 
+                id="access-menu" 
+                style="background-color: var(--card);"
+                class="absolute right-0 mt-3 w-64 border border-border rounded-2xl shadow-2xl p-2 opacity-0 scale-95 pointer-events-none transition-all duration-200 transform origin-top-right z-50"
+            >
+                <div class="p-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground border-b border-border mb-2">Display Settings</div>
+                
+                <button
+                    id="theme-toggle"
+                    class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
+                >
+                    <div class="flex items-center gap-3">
+                        <i id="theme-icon" data-lucide="moon" class="w-4 h-4 text-primary"></i>
+                        <span class="font-semibold text-sm">Dark Mode</span>
+                    </div>
+                    <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="theme-toggle-pill">
+                        <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="theme-toggle-dot"></div>
+                    </div>
+                </button>
+
+                <button
+                    id="dyslexia-toggle"
+                    class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
+                >
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="type" class="w-4 h-4 text-primary"></i>
+                        <span class="font-semibold text-sm">Dyslexia Font</span>
+                    </div>
+                    <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="dyslexia-toggle-pill">
+                        <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="dyslexia-toggle-dot"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="flex-grow focus:outline-none" tabindex="-1">
+        <!-- Hero Section -->
+        <section 
+            class="relative bg-muted overflow-hidden py-24 sm:py-32 px-4 sm:px-6 lg:px-8"
+            aria-labelledby="hero-heading"
+        >
+            <div class="hero-glow"></div>
+            <div class="relative z-10 max-w-4xl mx-auto text-center space-y-10">
+                <div class="inline-flex items-center gap-3 bg-indigo-600 text-white px-6 py-2 rounded-full border border-indigo-700 shadow-md shadow-indigo-500/30 animate-fade-in">
+                    <i data-lucide="heart-handshake" class="w-5 h-5 text-white"></i>
+                    <span class="font-black text-xs tracking-widest uppercase">The De-escalation Toolkit</span>
+                </div>
+                
+                <div class="space-y-6">
+                    <h1 id="hero-heading" class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] text-foreground">
+                        Connect Before <span class="text-primary">Correct.</span>
+                    </h1>
+                    <p class="text-xl sm:text-2xl font-medium text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                        A modern guide to Non-Violent Communication (NVC) for transforming conflict into community.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center gap-6">
+                    <div class="inline-flex items-center gap-3 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl border border-emerald-700 shadow-emerald-500/30">
+                        <i data-lucide="leaf" class="w-5 h-5 text-white"></i>
+                        <span class="font-black text-sm tracking-wide">Green Party values of peace and justice</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
+            
+            <!-- Why Matters -->
+            <section aria-labelledby="why-matters-heading" class="grid grid-cols-1 lg:grid-cols-1 gap-12 items-center">
+                <div class="space-y-8">
+                    <header class="space-y-2">
+                        <div class="text-primary font-black text-sm tracking-[0.2em] uppercase">Foundations</div>
+                        <h2 id="why-matters-heading" class="text-4xl sm:text-5xl font-extrabold tracking-tight">Why de-escalation matters</h2>
+                    </header>
+                    <div class="space-y-6 text-xl leading-relaxed text-muted-foreground font-light">
+                        <p>
+                            Conflicts are inevitable, but <span class="text-foreground font-semibold">violence is not.</span> How we respond to tension dictates the society we build together.
+                        </p>
+                        <p class="border-l-4 border-primary pl-8 italic py-2">
+                            "The Green Party explicitly seeks non-violent solutions to conflict and promotes non-violent methods of change."
+                        </p>
+                        <p>
+                            Whether you are navigating a community meeting or standing up for environmental care, these tools help create a bridge of mutual understanding where there was once a wall.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NVC in One Minute -->
+            <section aria-labelledby="nvc-minute-heading" class="space-y-12">
+                <header class="text-center space-y-4">
+                    <h2 id="nvc-minute-heading" class="text-4xl sm:text-5xl font-extrabold tracking-tight">NVC in one minute</h2>
+                    <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                        Four pillars to transform your communication from reactive to reflective.
+                    </p>
+                </header>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <article class="bg-card p-8 rounded-[2rem] border border-border shadow-sm card-hover flex flex-col gap-6">
+                        <div class="bg-blue-100 dark:bg-blue-500/20 w-12 h-12 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="eye" class="w-6 h-6 text-blue-700 dark:text-blue-400"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-black text-2xl tracking-tight text-blue-700 dark:text-blue-400 uppercase">Observations</h3>
+                            <p class="text-muted-foreground leading-relaxed">State exactly what happened neutrally, as if a camera were recording it. No judgement.</p>
+                        </div>
+                    </article>
+
+                    <article class="bg-card p-8 rounded-[2rem] border border-border shadow-sm card-hover flex flex-col gap-6">
+                        <div class="bg-rose-100 dark:bg-rose-500/20 w-12 h-12 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="heart" class="w-6 h-6 text-rose-700 dark:text-rose-400"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-black text-2xl tracking-tight text-rose-700 dark:text-rose-400 uppercase">Feelings</h3>
+                            <p class="text-muted-foreground leading-relaxed">Identify your core emotions. Separate what you feel from what you think others are doing.</p>
+                        </div>
+                    </article>
+
+                    <article class="bg-card p-8 rounded-[2rem] border border-border shadow-sm card-hover flex flex-col gap-6">
+                        <div class="bg-orange-100 dark:bg-orange-500/20 w-12 h-12 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-orange-700 dark:text-orange-400"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-black text-2xl tracking-tight text-orange-700 dark:text-orange-400 uppercase">Needs</h3>
+                            <p class="text-muted-foreground leading-relaxed">Connect your feelings to universal human values—like safety, respect, and community.</p>
+                        </div>
+                    </article>
+
+                    <article class="bg-card p-8 rounded-[2rem] border border-border shadow-sm card-hover flex flex-col gap-6">
+                        <div class="bg-emerald-100 dark:bg-emerald-500/20 w-12 h-12 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="message-square" class="w-6 h-6 text-emerald-700 dark:text-emerald-400"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-black text-2xl tracking-tight text-emerald-700 dark:text-emerald-400 uppercase">Requests</h3>
+                            <p class="text-muted-foreground leading-relaxed">Ask for specific, actionable steps to enrich life and restore connection.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Sentence Stems -->
+            <section class="space-y-20">
+                <header class="text-center space-y-4">
+                    <h2 class="text-4xl font-extrabold tracking-tight">The GreenMeans Toolkit</h2>
+                    <p class="text-lg text-muted-foreground">Practical starters for difficult conversations.</p>
+                </header>
+
+                <div class="space-y-12">
+                    <div class="group" id="stage-obs">
+                        <div class="inline-block bg-blue-600 dark:bg-blue-500 text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-widest uppercase mb-6 shadow-md shadow-blue-500/20">Stage 1</div>
+                        <h3 class="text-3xl font-black mb-6 text-blue-700 dark:text-blue-400 uppercase tracking-tight">Observations</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="bg-card p-6 rounded-2xl border border-border hover:border-blue-500/30 transition-colors">
+                                <ul class="space-y-4 text-xl font-medium">
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-blue-700 dark:text-blue-400 italic">"When I notice..."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-blue-700 dark:text-blue-400 italic">"When I hear people discussing..."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-blue-700 dark:text-blue-400 italic">"When this happens..."</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group" id="stage-feel">
+                        <div class="inline-block bg-rose-600 dark:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-widest uppercase mb-6 shadow-md shadow-rose-500/20">Stage 2</div>
+                        <h3 class="text-3xl font-black mb-6 text-rose-700 dark:text-rose-400 uppercase tracking-tight">Feelings</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="bg-card p-6 rounded-2xl border border-border hover:border-rose-500/30 transition-colors">
+                                <ul class="space-y-4 text-xl font-medium">
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-rose-700 dark:text-rose-400 italic">"I feel anxious when..."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-rose-700 dark:text-rose-400 italic">"I feel hopeful when..."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-rose-700 dark:text-rose-400 italic">"I feel concerned that..."</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group" id="stage-need">
+                        <div class="inline-block bg-orange-600 dark:bg-orange-500 text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-widest uppercase mb-6 shadow-md shadow-orange-500/20">Stage 3</div>
+                        <h3 class="text-3xl font-black mb-6 text-orange-700 dark:text-orange-400 uppercase tracking-tight">Needs & Values</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="bg-card p-6 rounded-2xl border border-border hover:border-orange-500/30 transition-colors">
+                                <ul class="space-y-4 text-xl font-medium">
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-orange-700 dark:text-orange-400 italic">"... because I value fairness."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-orange-700 dark:text-orange-400 italic">"... because I need for us to feel safe."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-orange-700 dark:text-orange-400 italic">"... because community is vital to me."</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group" id="stage-req">
+                        <div class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-widest uppercase mb-6 shadow-md shadow-emerald-500/20">Stage 4</div>
+                        <h3 class="text-3xl font-black mb-6 text-emerald-700 dark:text-emerald-400 uppercase tracking-tight">Requests</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="bg-card p-6 rounded-2xl border border-border hover:border-emerald-500/30 transition-colors">
+                                <ul class="space-y-4 text-xl font-medium">
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-emerald-700 dark:text-emerald-400 italic">"Would you be willing to...?"</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-emerald-700 dark:text-emerald-400 italic">"What I would like is..."</span></li>
+                                    <li class="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"><span class="text-emerald-700 dark:text-emerald-400 italic">"Would you be open to trying...?"</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Putting it together -->
+            <section aria-labelledby="examples-heading" class="bg-muted p-10 sm:p-16 rounded-[3rem] border border-border shadow-inner">
+                <header class="space-y-4 mb-12">
+                    <h2 id="examples-heading" class="text-4xl font-extrabold tracking-tight">Putting it together</h2>
+                    <p class="text-xl text-muted-foreground">See how NVC flows in real-world scenarios.</p>
+                </header>
+                
+                <div class="space-y-4">
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                                    Civic Action
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Expanding the airport</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I hear people discussing expanding the airport <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel concerned <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value clean air for our children <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be willing to look at green transport alternatives instead? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                    Community Fairness
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Youth centre budget</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I see the youth centre budget reduced <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel frustrated <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value social justice for all <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Could we try holding an open forum to discuss funding? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="tree-deciduous" class="w-3.5 h-3.5"></i>
+                                    Environmental Stewardship
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Tree preservation</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I notice the century-old oak trees are marked for removal <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel a deep sense of loss <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value biodiversity and our local heritage <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be willing to pause and consider a design that preserves them? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="droplets" class="w-3.5 h-3.5"></i>
+                                    Water Protection
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">River pollution</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I see updated reports of high pollution levels in our local river <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel alarmed <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value ecosystem health and public safety <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be willing to support a community water-testing initiative? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="home" class="w-3.5 h-3.5"></i>
+                                    Social Housing
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Affordable homes</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I notice no affordable homes are planned for this site <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel worried <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value inclusivity and the right to a secure home <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Could we discuss a 40% social rent requirement? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+                                    Renewable Energy
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Solar project delay</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I hear the community solar project is being paused <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel disappointed <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value energy independence and climate action <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be open to a public meeting to address concerns? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="bus" class="w-3.5 h-3.5"></i>
+                                    Local Transport
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Bus route cancellation</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I hear the 402 bus route is being cancelled <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel worried <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> as I value accessibility for those without cars <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be open to reviewing the community transit usage data with us? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="flower-2" class="w-3.5 h-3.5"></i>
+                                    Biodiversity
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Wildflower meadows</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I see the verges being mown during the height of bee season <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel frustrated <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value local wildlife and habitat restoration <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be willing to discuss a pollinator-friendly mowing schedule? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                                    Circular Economy
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Community repair cafe</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I see usable items being sent to landfill <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel a sense of waste <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value resource efficiency and community resilience <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be open to supporting a local 'Library of Things' or Repair Cafe? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-card rounded-3xl border border-border shadow-md hover:shadow-lg transition-all" aria-expanded="false">
+                        <button class="w-full flex items-center justify-between p-6 sm:p-8 text-left focus:outline-none group/acc">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <span class="bg-primary/20 text-primary text-xs font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full border border-primary/20 group-hover/acc:bg-primary group-hover/acc:text-primary-foreground transition-colors flex items-center gap-2.5 shrink-0">
+                                    <i data-lucide="sprout" class="w-3.5 h-3.5"></i>
+                                    Sustainable Food
+                                </span>
+                                <span class="text-base sm:text-lg font-black tracking-tight text-foreground uppercase group-hover/acc:text-primary transition-colors">Community allotments</span>
+                            </div>
+                            <div class="bg-muted p-2 rounded-full accordion-chevron-container">
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground accordion-chevron"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-8 sm:px-8 sm:pb-10 pt-2 border-t border-border/50">
+                                <p class="text-2xl font-light italic leading-relaxed text-foreground">
+                                    "When I notice long waiting lists for local allotments <a href="#stage-obs" class="inline-block bg-blue-600 dark:bg-blue-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-400 transition-all ml-1 align-middle shadow-sm">Obs</a>, I feel concerned <a href="#stage-feel" class="inline-block bg-rose-600 dark:bg-rose-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-rose-700 dark:hover:bg-rose-400 transition-all ml-1 align-middle shadow-sm">Feel</a> because I value food sovereignty and healthy living for all <a href="#stage-need" class="inline-block bg-orange-600 dark:bg-orange-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-orange-700 dark:hover:bg-orange-400 transition-all ml-1 align-middle shadow-sm">Need</a>. Would you be willing to look at converting disused council land into growing spaces? <a href="#stage-req" class="inline-block bg-emerald-600 dark:bg-emerald-500 text-white font-black not-italic font-sans text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-md cursor-pointer hover:bg-emerald-700 dark:hover:bg-emerald-400 transition-all ml-1 align-middle shadow-sm">Req</a>"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- De-escalation tips -->
+            <section aria-labelledby="tips-heading" class="relative group">
+                <div class="absolute inset-0 bg-primary/5 rounded-[3rem] -rotate-1 group-hover:rotate-0 transition-transform duration-500"></div>
+                <div class="relative bg-card border-2 border-primary/20 p-8 sm:p-12 rounded-[3.5rem] shadow-2xl space-y-12">
+                    <header class="text-center space-y-4">
+                        <div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-2">
+                            <i data-lucide="zap" class="w-3 h-3"></i>
+                            Quick Reference
+                        </div>
+                        <h2 id="tips-heading" class="text-4xl sm:text-5xl font-black tracking-tight">De-escalation Tips</h2>
+                        <p class="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                            Essential "Quick Wins" to help you stay grounded and maintain connection during high-tension moments.
+                        </p>
+                    </header>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6" id="tips-list">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <div class="bg-primary/5 border-2 border-primary/10 p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-8 group/pro mt-4">
+                        <div class="bg-primary text-primary-foreground p-5 rounded-2xl group-hover/pro:scale-110 transition-all duration-300 shadow-lg shadow-primary/20">
+                            <i data-lucide="star" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-2 text-center md:text-left">
+                            <h4 class="font-black text-xl uppercase tracking-tighter">Pro Tip: The Power of Silence</h4>
+                            <p class="text-muted-foreground leading-relaxed max-w-2xl">
+                                Sometimes the most generative thing you can do is <span class="text-foreground font-bold italic">just listen.</span> Wait for 4-5 seconds after someone finishes speaking before you respond. This creates the space they might need to fully express a hidden need.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Statement -->
+            <section class="text-center py-12 border-t border-border">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="flex justify-center">
+                        <div class="bg-primary/10 p-3 rounded-3xl">
+                            <i data-lucide="leaf" class="w-10 h-10 text-primary"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-black tracking-tight uppercase">Towards a <span class="text-primary">Kinder</span> Society</h2>
+                    <p class="text-lg text-muted-foreground font-light leading-relaxed">
+                        NVC and non-violent conflict resolution mirror the Green Party's core commitments. True political change requires better ways of working together.
+                    </p>
+                    <div class="pt-4">
+                        <a 
+                            href="#" 
+                            class="group relative inline-flex items-center gap-3 bg-primary text-primary-foreground font-black px-10 py-4 rounded-full shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/40 text-base uppercase tracking-widest"
+                        >
+                            Read Core Values 
+                            <i data-lucide="arrow-right" class="w-6 h-6 group-hover:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="bg-muted border-t border-border py-8" role="contentinfo">
+        <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 gap-6 text-center md:text-left">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 group">
+                    <img src="favicon.png" alt="GreenMeans Logo" class="w-6 h-6 object-contain rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                    <span class="font-extrabold text-xl tracking-tighter uppercase transition-colors group-hover:text-primary">GreenMeans</span>
+                </div>
+                <div class="text-muted-foreground text-[10px] font-medium tracking-widest uppercase">
+                    &copy; <span id="year"></span> The De-escalation Toolkit
+                </div>
+            </div>
+            <div class="max-w-4xl mx-auto md:mx-0">
+                <div class="inline-flex items-center gap-3 bg-card text-card-foreground px-5 py-3 rounded-2xl border border-border shadow-sm">
+                    <div class="bg-primary/10 p-1.5 rounded-full hidden sm:block">
+                        <i data-lucide="info" class="w-3.5 h-3.5 text-primary"></i>
+                    </div>
+                    <p class="text-xs sm:text-sm leading-relaxed font-medium text-muted-foreground text-left">
+                        Promoting a peaceful, democratic society. This page is a supportive, non-official resource inspired by the values of the Green Party of England and Wales and the principles of practical and peaceful communication.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu Management
+        const menuButton = document.getElementById('access-menu-button');
+        const menu = document.getElementById('access-menu');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            menuButton.setAttribute('aria-expanded', isMenuOpen);
+            if (isMenuOpen) {
+                menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                menu.classList.add('opacity-100', 'scale-100');
+            } else {
+                menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                menu.classList.remove('opacity-100', 'scale-100');
+            }
+        }
+
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        document.addEventListener('click', () => {
+            if (isMenuOpen) toggleMenu();
+        });
+
+        menu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Theme Management
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themePill = document.getElementById('theme-toggle-pill');
+        const themeDot = document.getElementById('theme-toggle-dot');
+        
+        function updateTheme(isDark) {
+            if (isDark) {
+                html.classList.add('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+                themePill.classList.add('bg-green-600');
+                themePill.classList.remove('bg-red-500', 'bg-muted-foreground/40');
+                themeDot.style.transform = 'translateX(28px)';
+            } else {
+                html.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+                themePill.classList.add('bg-red-500');
+                themePill.classList.remove('bg-green-600', 'bg-muted-foreground/40');
+                themeDot.style.transform = 'translateX(0)';
+            }
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        let isDark = localStorage.getItem('theme') !== 'light';
+        updateTheme(isDark);
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateTheme(isDark);
+        });
+
+        // Dyslexia Management
+        const dyslexiaToggle = document.getElementById('dyslexia-toggle');
+        const dyslexiaPill = document.getElementById('dyslexia-toggle-pill');
+        const dyslexiaToggleDot = document.getElementById('dyslexia-toggle-dot');
+        let isDyslexia = localStorage.getItem('dyslexia') === 'true';
+        
+        function updateDyslexia(enabled) {
+            if (enabled) {
+                html.classList.add('dyslexia');
+                dyslexiaPill.classList.add('bg-green-600');
+                dyslexiaPill.classList.remove('bg-red-500', 'bg-muted-foreground/40');
+                if (dyslexiaToggleDot) dyslexiaToggleDot.style.transform = 'translateX(28px)';
+            } else {
+                html.classList.remove('dyslexia');
+                dyslexiaPill.classList.add('bg-red-500');
+                dyslexiaPill.classList.remove('bg-green-600', 'bg-muted-foreground/40');
+                if (dyslexiaToggleDot) dyslexiaToggleDot.style.transform = 'translateX(0)';
+            }
+        }
+
+        updateDyslexia(isDyslexia);
+
+        dyslexiaToggle.addEventListener('click', () => {
+            isDyslexia = !isDyslexia;
+            localStorage.setItem('dyslexia', isDyslexia ? 'true' : 'false');
+            updateDyslexia(isDyslexia);
+        });
+
+        // Tips Injection
+        const tips = [
+            "Pause before replying to gather your thoughts.",
+            "Lower your voice and slow your speed intentionally.",
+            "Reflect back what you heard to prove you are listening.",
+            "Look for shared values even in deep disagreements.",
+            "Focus on the issue, not the person.",
+            "Take a five-minute break if tensions remain too high.",
+            "Acknowledge the other person's emotions honestly.",
+            "Ask 'Help me to understand...' to invite a deeper perspective.",
+            "Notice physical signs of stress in yourself like jaw clenching.",
+            "Focus on 'Both/And' thinking rather than 'Either/Or'.",
+            "Maintain open body language and comfortable eye contact.",
+            "Use 'we' language to emphasise shared goals and belonging.",
+            "Offer a genuine 'Thank you for sharing' even if you disagree.",
+            "Breathe deeply to regulate your own nervous system."
+        ];
+        
+        const tipsList = document.getElementById('tips-list');
+        tips.forEach(tip => {
+            const div = document.createElement('div');
+            div.className = 'group/tip flex items-start gap-4 bg-background border border-border p-6 rounded-2xl shadow-sm hover:border-primary/50 hover:shadow-md transition-all duration-300';
+            div.innerHTML = `
+                <div class="mt-1 bg-primary/5 p-1.5 rounded-lg group-hover/tip:bg-primary transition-colors">
+                    <i data-lucide="check" class="w-4 h-4 text-primary group-hover/tip:text-primary-foreground"></i>
+                </div>
+                <span class="text-[17px] font-semibold leading-snug">${tip}</span>
+            `;
+            tipsList.appendChild(div);
+        });
+
+        // Set current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Accordion Management
+        document.querySelectorAll('.accordion-item button').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isOpen = item.getAttribute('aria-expanded') === 'true';
+                
+                // Close all other items
+                document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                item.setAttribute('aria-expanded', !isOpen);
+            });
+        });
+
+        // Initialise Lucide icons
+        lucide.createIcons();
+
+        // Handle initial load scroll and history
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        window.addEventListener('load', () => {
+            if (!window.location.hash) {
+                window.scrollTo(0, 0);
+            }
+        });
+    </script>
+</body>
+</html>
