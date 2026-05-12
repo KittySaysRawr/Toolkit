@@ -139,12 +139,16 @@
 
         /* Custom Scaling for Padding & Vertical Space */
         :root {
-            --spacing-mod: calc(var(--padding-scale) / var(--text-scale));
+            --spacing-mod: var(--padding-scale);
         }
 
         .max-w-4xl {
+            width: 100%;
+            max-width: calc(var(--text-scale) * 56rem) !important; /* Scale container with text size */
             padding-left: calc(var(--spacing-mod) * 1rem) !important;
             padding-right: calc(var(--spacing-mod) * 1rem) !important;
+            margin-left: auto;
+            margin-right: auto;
         }
         @media (min-width: 640px) {
             .max-w-4xl {
@@ -176,6 +180,9 @@
             padding-bottom: calc(var(--spacing-mod) * 4rem) !important;
         }
         
+        .p-6 { padding: calc(var(--spacing-mod) * 1.5rem) !important; }
+        .p-8 { padding: calc(var(--spacing-mod) * 2rem) !important; }
+
         .space-y-8 > :not([hidden]) ~ :not([hidden]) { margin-top: calc(var(--spacing-mod) * 2rem) !important; }
         .space-y-12 > :not([hidden]) ~ :not([hidden]) { margin-top: calc(var(--spacing-mod) * 3rem) !important; }
         .space-y-16 > :not([hidden]) ~ :not([hidden]) { margin-top: calc(var(--spacing-mod) * 4rem) !important; }
@@ -486,7 +493,7 @@
                     </p>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-card p-8 rounded-[2.5rem] border border-border shadow-sm hover:border-purple-500/30 transition-all flex flex-col gap-8 group relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
                         <div class="flex items-center gap-5 relative">
