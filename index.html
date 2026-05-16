@@ -295,79 +295,89 @@
                 <span class="font-extrabold text-xl tracking-tighter uppercase hidden sm:inline-block">GreenMeans: Toolkit</span>
             </div>
 
-        <div class="relative">
-            <button
-                id="access-menu-button"
-                aria-expanded="false"
-                aria-haspopup="true"
-                class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-bold text-xs tracking-widest uppercase hover:scale-105 transition-all shadow-lg active:scale-95"
-            >
-                <i data-lucide="settings-2" class="w-4 h-4"></i>
-                <span>Settings</span>
-            </button>
-
-            <div 
-                id="access-menu" 
-                style="background-color: var(--card);"
-                class="absolute right-0 mt-3 w-64 border border-border rounded-2xl shadow-2xl p-2 opacity-0 scale-95 pointer-events-none transition-all duration-200 transform origin-top-right z-50"
-            >
-                <div class="p-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground border-b border-border mb-2">Display Settings</div>
-                
-                <button
-                    id="theme-toggle"
-                    class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
+            <div class="flex items-center gap-2">
+                <a
+                    href="https://greenmeans.ovh"
+                    class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted text-foreground font-bold text-xs tracking-widest uppercase hover:scale-105 transition-all shadow-md active:scale-95 border border-border whitespace-nowrap"
                 >
-                    <div class="flex items-center gap-3">
-                        <i id="theme-icon" data-lucide="moon" class="w-4 h-4 text-primary"></i>
-                        <span class="font-semibold text-sm">Dark Mode</span>
-                    </div>
-                    <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="theme-toggle-pill">
-                        <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="theme-toggle-dot"></div>
-                    </div>
-                </button>
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>Home</span>
+                </a>
 
-                <button
-                    id="dyslexia-toggle"
-                    class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
-                >
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="type" class="w-4 h-4 text-primary"></i>
-                        <span class="font-semibold text-sm">Dyslexia Font</span>
-                    </div>
-                    <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="dyslexia-toggle-pill">
-                        <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="dyslexia-toggle-dot"></div>
-                    </div>
-                </button>
+                <div class="relative">
+                    <button
+                        id="access-menu-button"
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-bold text-xs tracking-widest uppercase hover:scale-105 transition-all shadow-lg active:scale-95"
+                    >
+                        <i data-lucide="settings-2" class="w-4 h-4"></i>
+                        <span>Settings</span>
+                    </button>
 
-                <div class="border-t border-border mt-2 pt-2">
-                    <div class="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Adjust Layout</div>
-                    
-                    <div class="flex items-center justify-between px-4 py-2">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="maximize" class="w-4 h-4 text-primary"></i>
-                            <span class="font-semibold text-sm">Padding</span>
-                        </div>
-                        <div class="flex items-center gap-1 bg-muted p-1 rounded-lg border border-border">
-                            <button id="padding-dec" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">−</button>
-                            <span id="padding-val" class="text-xs font-black min-w-[24px] text-center">0</span>
-                            <button id="padding-inc" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">+</button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between px-4 py-2">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="type" class="w-4 h-4 text-primary"></i>
-                            <span class="font-semibold text-sm">Text Size</span>
-                        </div>
-                        <div class="flex items-center gap-1 bg-muted p-1 rounded-lg border border-border">
-                            <button id="text-dec" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">−</button>
-                            <span id="text-val" class="text-xs font-black min-w-[24px] text-center">0</span>
-                            <button id="text-inc" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">+</button>
+                    <div 
+                        id="access-menu" 
+                        style="background-color: var(--card);"
+                        class="absolute right-0 mt-3 w-64 border border-border rounded-2xl shadow-2xl p-2 opacity-0 scale-95 pointer-events-none transition-all duration-200 transform origin-top-right z-50"
+                    >
+                        <div class="p-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground border-b border-border mb-2">Display Settings</div>
+                        
+                        <button
+                            id="theme-toggle"
+                            class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
+                        >
+                            <div class="flex items-center gap-3">
+                                <i id="theme-icon" data-lucide="moon" class="w-4 h-4 text-primary"></i>
+                                <span class="font-semibold text-sm">Dark Mode</span>
+                            </div>
+                            <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="theme-toggle-pill">
+                                <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="theme-toggle-dot"></div>
+                            </div>
+                        </button>
+        
+                        <button
+                            id="dyslexia-toggle"
+                            class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors text-left"
+                        >
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="type" class="w-4 h-4 text-primary"></i>
+                                <span class="font-semibold text-sm">Dyslexia Font</span>
+                            </div>
+                            <div class="w-14 h-7 bg-muted-foreground/40 rounded-full relative transition-all duration-300 border border-border shadow-inner" id="dyslexia-toggle-pill">
+                                <div class="w-5 h-5 bg-white rounded-full absolute top-[3px] left-[3px] transition-transform duration-300 shadow-md ring-1 ring-black/5" id="dyslexia-toggle-dot"></div>
+                            </div>
+                        </button>
+        
+                        <div class="border-t border-border mt-2 pt-2">
+                            <div class="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Adjust Layout</div>
+                            
+                            <div class="flex items-center justify-between px-4 py-2">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="maximize" class="w-4 h-4 text-primary"></i>
+                                    <span class="font-semibold text-sm">Padding</span>
+                                </div>
+                                <div class="flex items-center gap-1 bg-muted p-1 rounded-lg border border-border">
+                                    <button id="padding-dec" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">−</button>
+                                    <span id="padding-val" class="text-xs font-black min-w-[24px] text-center">0</span>
+                                    <button id="padding-inc" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">+</button>
+                                </div>
+                            </div>
+        
+                            <div class="flex items-center justify-between px-4 py-2">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="type" class="w-4 h-4 text-primary"></i>
+                                    <span class="font-semibold text-sm">Text Size</span>
+                                </div>
+                                <div class="flex items-center gap-1 bg-muted p-1 rounded-lg border border-border">
+                                    <button id="text-dec" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">−</button>
+                                    <span id="text-val" class="text-xs font-black min-w-[24px] text-center">0</span>
+                                    <button id="text-inc" class="w-7 h-7 rounded-md hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all active:scale-90 font-bold text-base">+</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </header>
 
